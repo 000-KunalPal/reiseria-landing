@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { m, useInView } from "motion/react";
 import {
@@ -131,8 +131,31 @@ function CardGrid({
   monthLayout?: boolean;
   active?: boolean;
 }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    const resetScroll = () => {
+      const scroller = scrollerRef.current;
+
+      if (scroller) {
+        scroller.scrollLeft = 0;
+        scroller.scrollTo({ left: 0, top: 0, behavior: "auto" });
+      }
+    };
+
+    resetScroll();
+    const frame = window.requestAnimationFrame(resetScroll);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [active]);
+
   return (
     <div
+      ref={scrollerRef}
       className={
         monthLayout
           ? "-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-6 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4 xl:grid-cols-6 [&::-webkit-scrollbar]:hidden"

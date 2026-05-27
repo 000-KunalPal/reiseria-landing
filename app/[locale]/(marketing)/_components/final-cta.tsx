@@ -17,9 +17,23 @@ export function FinalCta() {
       className="relative flex min-h-[720px] w-full items-start justify-center overflow-hidden bg-[#faf6ee] px-5 pt-12 sm:min-h-[780px] sm:px-8 sm:pt-24 lg:min-h-[760px] lg:px-12 lg:pt-28"
     >
       <Image
+        src="/cta/cta-cover-mobile.webp"
+        alt=""
+        className="object-cover object-bottom sm:hidden"
+        fill
+        sizes="100vw"
+      />
+      <Image
+        src="/cta/cta-cover-tab.webp"
+        alt=""
+        className="hidden object-cover object-bottom sm:block lg:hidden"
+        fill
+        sizes="100vw"
+      />
+      <Image
         src="/cta/cta-cover.webp"
         alt=""
-        className="object-cover object-bottom sm:object-center"
+        className="hidden object-cover object-center lg:block"
         fill
         sizes="100vw"
       />
