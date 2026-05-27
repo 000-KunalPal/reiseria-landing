@@ -98,7 +98,7 @@ export default function Footer() {
     {
       title: t("col3Title"),
       links: [
-        { label: t("col3Link1"), href: "mailto:hello@reiseria.com" },
+        { label: t("col3Link1"), href: "mailto:concierge@reiseria.com" },
         { label: t("col3Link2"), href: "#final-cta" },
         { label: t("col3Link3"), href: "#trust" },
         { label: t("col3Link4"), href: "#final-cta" },

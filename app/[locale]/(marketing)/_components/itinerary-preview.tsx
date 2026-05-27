@@ -82,11 +82,11 @@ function ItineraryCard({ itinerary, t }: { itinerary: Itinerary; t: (key: string
           {itinerary.title}
         </h3>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y border-[#1a5c38]/10 py-3">
-          <p className="max-w-[13rem] text-sm leading-6 text-[#0d2b1a]/64">
+        <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-y border-[#1a5c38]/10 py-3">
+          <p className="min-w-0 text-sm leading-6 text-[#0d2b1a]/64">
             {itinerary.destinations}
           </p>
-          <p className="rounded-full bg-[#1a5c38] px-4 py-2 text-right text-sm font-semibold text-[#faf6ee] shadow-[0_12px_28px_rgba(26,92,56,0.18)]">
+          <p className="shrink-0 whitespace-nowrap rounded-full bg-[#1a5c38] px-3.5 py-2 text-right text-sm font-semibold text-[#faf6ee] shadow-[0_12px_28px_rgba(26,92,56,0.18)] sm:px-4">
             {itinerary.priceFrom}
           </p>
         </div>

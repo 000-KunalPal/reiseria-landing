@@ -40,13 +40,13 @@ export function FinalCta() {
         <div className="mt-6 flex w-full max-w-[20.5rem] items-center justify-center gap-3 sm:mt-8 sm:max-w-none">
           <a
             className="flex min-h-12 flex-1 items-center justify-center rounded-full bg-[#1a5c38] px-5 text-sm font-semibold text-[#faf6ee] transition-colors hover:bg-[#0d2b1a] sm:flex-none sm:px-6"
-            href="mailto:hello@reiseria.com?subject=Plan%20my%20journey"
+            href="mailto:concierge@reiseria.com?subject=Plan%20my%20journey"
           >
             {t("planJourney")}
           </a>
           <a
             className="flex min-h-12 flex-1 items-center justify-center rounded-full border border-[#0d2b1a]/15 bg-[#faf6ee]/86 px-5 text-sm font-semibold text-[#0d2b1a] backdrop-blur-sm transition-colors hover:bg-[#faf6ee] sm:flex-none sm:px-6"
-            href="mailto:hello@reiseria.com?subject=Talk%20to%20Reiseria"
+            href="mailto:concierge@reiseria.com?subject=Talk%20to%20Reiseria"
           >
             {t("talkToUs")}
           </a>
