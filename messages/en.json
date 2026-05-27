@@ -10,7 +10,7 @@
     "skipToContent": "Skip to main content"
   },
   "UtilityStrip": {
-    "announcement": "Phase 1 concierge planning now open for early travelers",
+    "announcement": "Now accepting 2026 departures — 12 private itineraries available",
     "dismiss": "Dismiss announcement",
     "phone": "Phone",
     "subscribe": "Subscribe",
@@ -44,6 +44,15 @@
     "oman": "Oman",
     "indiaAlt": "The Taj Mahal in India",
     "omanAlt": "A desert landscape in Oman",
+    "indiaTagline": "15 journeys · Rajasthan to Kerala · Heritage & wilderness",
+    "omanTagline": "8 journeys · Muscat to Wahiba Sands · Desert & coast",
+    "tagHeritage": "Heritage",
+    "tagNature": "Nature",
+    "tagCulture": "Culture",
+    "tagDesert": "Desert",
+    "tagCoast": "Coast",
+    "exploreIndia": "Explore India",
+    "exploreOman": "Explore Oman",
     "familyAdventures": "Family adventures",
     "coupleHolidays": "Couple holidays",
     "soloAdventures": "Solo adventures",
@@ -84,12 +93,16 @@
     "title": "Why book with Reiseria?",
     "card1Title": "Travel's friendliest experts",
     "card1Desc": "We promise we'll care about your trip as much as you do. A dedicated travel consultant will listen, guide and create a trip that could only be yours.",
+    "card1Proof": "You work with the same consultant from first call to final travel notes.",
     "card2Title": "Specialists make it effortless",
     "card2Desc": "From seamless logistics to unexpected discoveries, our deep destination specialism means travel that feels effortless and richer than you could plan for alone.",
-    "card3Title": "Rockstar service as standard",
+    "card2Proof": "Every itinerary is reviewed by someone who has personally been there.",
+    "card3Title": "Dedicated support, 24/7",
     "card3Desc": "We guarantee that you'll have our support every step of the way. We never pass the buck or fail to take responsibility. We'll be there whenever you need us.",
+    "card3Proof": "You have a direct line for changes, delays and questions while you travel.",
     "card4Title": "Our Info-Packs are legendary",
-    "card4Desc": "Transfers, tickets and check-ins verified so your trip runs like clockwork. Plus, we create your totally tailored trip bible, so every detail is in your hand, at all times."
+    "card4Desc": "Transfers, tickets and check-ins verified so your trip runs like clockwork. Plus, we create your totally tailored trip bible, so every detail is in your hand, at all times.",
+    "card4Proof": "Before departure, every transfer, ticket and check-in is checked against your final route."
   },
   "ItineraryPreview": {
     "badge": "Curated journeys",

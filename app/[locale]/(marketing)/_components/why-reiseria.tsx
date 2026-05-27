@@ -12,36 +12,44 @@ export function WhyReiseria() {
       icon: Smile,
       title: t("card1Title"),
       description: t("card1Desc"),
+      proof: t("card1Proof"),
       className: "bg-[#e8c4ab]",
       titleClass: "text-[#0d2b1a]",
       descClass: "text-[#0d2b1a]/70",
+      proofClass: "text-[#0d2b1a]/85",
       iconClass: "text-[#1a5c38]",
     },
     {
       icon: Users,
       title: t("card2Title"),
       description: t("card2Desc"),
+      proof: t("card2Proof"),
       className: "bg-[#f0e6d2]",
       titleClass: "text-[#0d2b1a]",
       descClass: "text-[#0d2b1a]/70",
+      proofClass: "text-[#0d2b1a]/85",
       iconClass: "text-[#1a5c38]",
     },
     {
       icon: Star,
       title: t("card3Title"),
       description: t("card3Desc"),
+      proof: t("card3Proof"),
       className: "bg-[#1a5c38]",
       titleClass: "text-[#faf6ee]",
       descClass: "text-[#faf6ee]/85",
+      proofClass: "text-[#faf6ee]",
       iconClass: "text-[#faf6ee]/80",
     },
     {
       icon: BookOpen,
       title: t("card4Title"),
       description: t("card4Desc"),
+      proof: t("card4Proof"),
       className: "bg-[#0d2b1a]",
       titleClass: "text-[#faf6ee]",
       descClass: "text-[#faf6ee]/85",
+      proofClass: "text-[#faf6ee]",
       iconClass: "text-[#faf6ee]/80",
     },
   ];
@@ -58,9 +66,11 @@ export function WhyReiseria() {
             icon: Icon,
             title,
             description,
+            proof,
             className,
             titleClass,
             descClass,
+            proofClass,
             iconClass,
           }) => (
             <article
@@ -86,11 +96,19 @@ export function WhyReiseria() {
               </h3>
               <p
                 className={cn(
-                  "font-sans text-[0.96rem] leading-7 sm:mt-auto sm:text-sm sm:leading-relaxed",
+                  "font-sans text-[0.96rem] leading-7 sm:text-sm sm:leading-relaxed",
                   descClass
                 )}
               >
                 {description}
+              </p>
+              <p
+                className={cn(
+                  "mt-auto border-t border-current/20 pt-4 font-sans text-sm font-medium leading-6",
+                  proofClass
+                )}
+              >
+                {proof}
               </p>
             </article>
           ))}

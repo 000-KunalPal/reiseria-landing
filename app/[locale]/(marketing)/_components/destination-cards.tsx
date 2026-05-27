@@ -4,6 +4,13 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { m, useInView } from "motion/react";
+import {
+  ArrowRight,
+  Compass,
+  Landmark,
+  Leaf,
+  type LucideIcon,
+} from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/card";
 import {
   Tabs,
@@ -16,6 +23,12 @@ type ExploreCard = {
   name: string;
   image: string;
   alt: string;
+  tagline?: string;
+  cta?: string;
+  tags?: {
+    label: string;
+    icon: LucideIcon;
+  }[];
 };
 
 type ExploreTab = {
@@ -36,12 +49,15 @@ function ExploreCardItem({
   name,
   image,
   alt,
+  tagline,
+  cta,
+  tags,
   compact = false,
 }: ExploreCard & {
   compact?: boolean;
 }) {
   return (
-    <Card className="group h-full overflow-hidden rounded-[30px] border-0 bg-transparent p-0 ring-0 sm:rounded-[28px]">
+    <Card className="group h-full overflow-visible rounded-[30px] border-0 bg-transparent p-0 ring-0 sm:rounded-[28px]">
       <div className="relative aspect-[4/3] overflow-hidden rounded-[30px] bg-[#d4e2d5] sm:rounded-[28px]">
         <Image
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
@@ -57,18 +73,49 @@ function ExploreCardItem({
           }
         />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/45 to-transparent" />
+        {cta ? (
+          <a
+            href="#itinerary"
+            className="absolute inset-x-5 bottom-5 flex translate-y-0 items-center justify-center gap-2 rounded-full border border-white/65 bg-[#faf6ee] px-5 py-3 text-sm font-semibold text-[#0d2b1a] shadow-[0_10px_26px_rgba(13,43,26,0.16)] transition duration-300 ease-out hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#faf6ee] sm:translate-y-8 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100"
+          >
+            <span>{cta}</span>
+            <ArrowRight className="size-4" strokeWidth={1.8} />
+          </a>
+        ) : null}
         <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/35" />
       </div>
 
-      <CardTitle
-        className={
-          compact
-            ? "px-1 pt-4 text-center font-serif text-xl font-semibold text-[#1a5c38]"
-            : "px-1 pt-5 text-center font-serif text-2xl font-semibold text-[#1a5c38] md:text-3xl"
-        }
-      >
-        {name}
-      </CardTitle>
+      <div className={compact ? "px-1 pt-4 text-center" : "px-2 pb-2 pt-5 text-center"}>
+        <CardTitle
+          className={
+            compact
+              ? "font-serif text-xl font-semibold text-[#1a5c38]"
+              : "font-serif text-2xl font-semibold text-[#1a5c38] md:text-3xl"
+          }
+        >
+          {name}
+        </CardTitle>
+
+        {tagline ? (
+          <p className="mx-auto mt-3 max-w-sm text-sm font-medium leading-6 text-[#0d2b1a]/70">
+            {tagline}
+          </p>
+        ) : null}
+
+        {tags ? (
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {tags.map(({ label, icon: Icon }) => (
+              <span
+                key={label}
+                className="inline-flex h-9 items-center gap-2 rounded-full border border-[#1a5c38]/15 bg-[#faf6ee]/75 px-3 text-xs font-semibold text-[#1a5c38] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
+              >
+                <Icon className="size-3.5" strokeWidth={1.8} />
+                {label}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
     </Card>
   );
 }
@@ -170,11 +217,25 @@ export function DestinationCards() {
       name: t("india"),
       image: "/about-reiseria/taj-mahal-card.webp",
       alt: t("indiaAlt"),
+      tagline: t("indiaTagline"),
+      cta: t("exploreIndia"),
+      tags: [
+        { label: t("tagHeritage"), icon: Landmark },
+        { label: t("tagNature"), icon: Leaf },
+        { label: t("tagCulture"), icon: Compass },
+      ],
     },
     {
       name: t("oman"),
       image: "/about-reiseria/oman-card.webp",
       alt: t("omanAlt"),
+      tagline: t("omanTagline"),
+      cta: t("exploreOman"),
+      tags: [
+        { label: t("tagDesert"), icon: Compass },
+        { label: t("tagCoast"), icon: Leaf },
+        { label: t("tagCulture"), icon: Landmark },
+      ],
     },
   ];
 
@@ -293,7 +354,7 @@ export function DestinationCards() {
               ))}
             </TabsList>
 
-            <div className="relative min-h-[390px] w-full sm:min-h-[430px] lg:min-h-[390px] xl:min-h-[420px]">
+            <div className="relative min-h-[520px] w-full sm:min-h-[500px] lg:min-h-[480px] xl:min-h-[500px]">
               {exploreTabs.map((tab) => (
                 <ExplorePanel
                   key={tab.value}
