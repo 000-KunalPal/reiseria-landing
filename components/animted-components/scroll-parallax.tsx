@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, type MotionValue, useScroll, useTransform } from "motion/react";
+import { m, type MotionValue, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { WhyReiseria } from "@/app/[locale]/(marketing)/_components/why-reiseria";
 
@@ -13,72 +13,68 @@ type ParallaxImage = {
 
 const ParallaxScroll = () => {
     const t = useTranslations("ParallaxScroll");
-    const [isParallaxEnabled, setIsParallaxEnabled] = useState(false);
+    const isParallaxEnabled = useSyncExternalStore(
+        (callback) => {
+            window.addEventListener("resize", callback);
+            return () => window.removeEventListener("resize", callback);
+        },
+        () =>
+            typeof window !== "undefined" &&
+            window.innerWidth >= 768 &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+        () => false
+    );
 
     const images: ParallaxImage[] = [
         {
-            src: "/months/january.png",
+            src: "/months/january-gallery.webp",
             alt: t("januaryAlt"),
         },
         {
-            src: "/about-reiseria/kerela.png",
+            src: "/about-reiseria/kerela-gallery.webp",
             alt: t("keralaAlt"),
         },
         {
-            src: "/months/august.png",
+            src: "/months/august-gallery.webp",
             alt: t("augustAlt"),
         },
         {
-            src: "/months/march.png",
+            src: "/months/march-gallery.webp",
             alt: t("marchAlt"),
         },
         {
-            src: "/about-reiseria/oman.png",
+            src: "/about-reiseria/oman-gallery.webp",
             alt: t("omanAlt"),
         },
         {
-            src: "/months/july.png",
+            src: "/months/july-gallery.webp",
             alt: t("julyAlt"),
         },
         {
-            src: "/months/may.png",
+            src: "/months/may-gallery.webp",
             alt: t("mayAlt"),
         },
         {
-            src: "/months/october.png",
+            src: "/months/october-gallery.webp",
             alt: t("octoberAlt"),
         },
         {
-            src: "/traveller-type/solo.png",
+            src: "/traveller-type/solo-gallery.webp",
             alt: t("soloAlt"),
         },
         {
-            src: "/featured-itineraries/ola1.png",
+            src: "/featured-itineraries/ola1-gallery.webp",
             alt: t("omanMosqueAlt"),
         },
         {
-            src: "/traveller-type/couple.png",
+            src: "/traveller-type/couple-gallery.webp",
             alt: t("coupleAlt"),
         },
         {
-            src: "/featured-itineraries/rie2.png",
+            src: "/featured-itineraries/rie2-gallery.webp",
             alt: t("indiaPalaceAlt"),
         },
     ];
-
-    useEffect(() => {
-        const updateMode = () => {
-            setIsParallaxEnabled(
-                window.innerWidth >= 768 &&
-                !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-            );
-        };
-
-        updateMode();
-        window.addEventListener("resize", updateMode);
-
-        return () => window.removeEventListener("resize", updateMode);
-    }, []);
 
     return (
         <main className="w-full bg-[#faf6ee] font-sans text-[#0d2b1a]">
@@ -133,31 +129,24 @@ const StaticCollage = ({ images }: { images: ParallaxImage[] }) => {
 
 const ParallaxCollage = ({ images }: { images: ParallaxImage[] }) => {
     const gallery = useRef<HTMLDivElement>(null);
-    const [dimension, setDimension] = useState({ width: 0, height: 0 });
+    const height = useSyncExternalStore(
+        (callback) => {
+            window.addEventListener("resize", callback);
+            return () => window.removeEventListener("resize", callback);
+        },
+        () => (typeof window !== "undefined" ? window.innerHeight : 0),
+        () => 0
+    );
 
     const { scrollYProgress } = useScroll({
         target: gallery,
         offset: ["start end", "end start"],
     });
 
-    const { height } = dimension;
     const y = useTransform(scrollYProgress, [0, 1], [0, height * 2]);
     const y2 = useTransform(scrollYProgress, [0, 1], [0, height * 3.3]);
     const y3 = useTransform(scrollYProgress, [0, 1], [0, height * 1.25]);
     const y4 = useTransform(scrollYProgress, [0, 1], [0, height * 3]);
-
-    useEffect(() => {
-        const resize = () => {
-            setDimension({ width: window.innerWidth, height: window.innerHeight });
-        };
-
-        window.addEventListener("resize", resize);
-        resize();
-
-        return () => {
-            window.removeEventListener("resize", resize);
-        };
-    }, []);
 
     return (
         <section
@@ -179,7 +168,7 @@ type ColumnProps = {
 
 const Column = ({ imageSources, y }: ColumnProps) => {
     return (
-        <motion.div
+        <m.div
             className="relative flex h-full w-1/3 min-w-0 flex-col gap-[2vw] first:top-[-45%] [&:nth-child(2)]:top-[-95%] [&:nth-child(3)]:top-[-45%] [&:nth-child(4)]:hidden lg:w-1/4 lg:[&:nth-child(4)]:flex lg:[&:nth-child(4)]:top-[-75%]"
             style={{ y }}
         >
@@ -197,7 +186,7 @@ const Column = ({ imageSources, y }: ColumnProps) => {
                     />
                 </div>
             ))}
-        </motion.div>
+        </m.div>
     );
 };
 

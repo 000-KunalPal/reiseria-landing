@@ -3,8 +3,9 @@
 import { XIcon, PhoneIcon, ChevronDownIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter, usePathname } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useCurrency } from "@/components/currency-context";
+import { routing, type Locale } from "@/i18n/routing";
 
 import { cn } from "@/lib/utils";
 
@@ -12,12 +13,29 @@ type UtilityStripProps = {
   className?: string;
 };
 
-const LANGUAGES = [
-  { value: "en", label: "UK", flag: "🇬🇧" },
-  { value: "de", label: "DE", flag: "🇩🇪" },
-  { value: "fr", label: "FR", flag: "🇫🇷" },
-  { value: "it", label: "IT", flag: "🇮🇹" },
-];
+const LANGUAGE_OPTIONS: Record<Locale, { label: string; flag: string }> = {
+  en: { label: "UK", flag: "🇬🇧" },
+  de: { label: "DE", flag: "🇩🇪" },
+  fr: { label: "FR", flag: "🇫🇷" },
+  it: { label: "IT", flag: "🇮🇹" },
+};
+
+const LANGUAGES = routing.locales.map((locale) => ({
+  value: locale,
+  ...LANGUAGE_OPTIONS[locale],
+}));
+
+function getPathnameWithoutLocale(pathname: string) {
+  const segments = pathname.split("/");
+  const maybeLocale = segments[1];
+
+  if (!routing.locales.includes(maybeLocale as Locale)) {
+    return pathname || "/";
+  }
+
+  const nextPathname = `/${segments.slice(2).join("/")}`;
+  return nextPathname === "/" ? "/" : nextPathname.replace(/\/$/, "");
+}
 
 const CURRENCIES = [
   { value: "USD", label: "USD", symbol: "$" },
@@ -40,25 +58,74 @@ function MiniDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  /* close on outside click */
+  /* close on outside click or Escape key */
   useEffect(() => {
     if (!open) return;
-    const handler = (e: MouseEvent) => {
+    const clickHandler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const keyHandler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("mousedown", clickHandler);
+    document.addEventListener("keydown", keyHandler);
+    return () => {
+      document.removeEventListener("mousedown", clickHandler);
+      document.removeEventListener("keydown", keyHandler);
+    };
   }, [open]);
+
+  // Focus first item when opening
+  useEffect(() => {
+    if (open) {
+      const timer = setTimeout(() => {
+        itemRefs.current[0]?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
+  const handleTriggerKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setOpen(true);
+    }
+  };
+
+  const handleItemKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextIndex = (index + 1) % items.length;
+      itemRefs.current[nextIndex]?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex = (index - 1 + items.length) % items.length;
+      itemRefs.current[prevIndex]?.focus();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      setOpen(false);
+      triggerRef.current?.focus();
+    }
+  };
 
   return (
     <div className="relative" ref={ref}>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex cursor-pointer items-center gap-1 p-0 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#faf6ee]/80 hover:text-[#faf6ee] transition-colors focus-visible:outline-none"
+        onKeyDown={handleTriggerKeyDown}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="inline-flex cursor-pointer items-center gap-1 p-0 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#faf6ee]/80 hover:text-[#faf6ee] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c4944a] focus-visible:ring-offset-1 focus-visible:ring-offset-[#0d2b1a] rounded"
       >
         {trigger}
         <ChevronDownIcon className="size-3 text-[#faf6ee]/60" />
@@ -66,15 +133,20 @@ function MiniDropdown({
 
       {open && (
         <div className="absolute left-0 top-full z-[70] mt-1.5 min-w-[110px] animate-in fade-in-0 zoom-in-95 rounded-md border border-[#c4944a]/30 bg-[#faf6ee] p-1 text-[#0d2b1a] shadow-xl">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <button
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
               key={item.value}
               type="button"
+              onKeyDown={(e) => handleItemKeyDown(e, index)}
               onClick={() => {
                 onSelect(item.value);
                 setOpen(false);
+                triggerRef.current?.focus();
               }}
-              className="flex w-full cursor-pointer items-center gap-2 rounded-sm px-2.5 py-1.5 text-[0.72rem] font-medium transition-colors hover:bg-[#1a5c38]/10 hover:text-[#0d2b1a] select-none"
+              className="flex w-full cursor-pointer items-center gap-2 rounded-sm px-2.5 py-1.5 text-[0.72rem] font-medium transition-colors hover:bg-[#1a5c38]/10 hover:text-[#0d2b1a] focus:bg-[#1a5c38]/10 focus:text-[#0d2b1a] focus:outline-none select-none"
             >
               {item.label}
             </button>
@@ -91,8 +163,7 @@ function MiniDropdown({
 export function UtilityStrip({ className }: UtilityStripProps) {
   const t = useTranslations("UtilityStrip");
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { replace } = useRouter();
   const { currency, setCurrency } = useCurrency();
   const [dismissed, setDismissed] = useState(false);
 
@@ -102,7 +173,12 @@ export function UtilityStrip({ className }: UtilityStripProps) {
   };
 
   const handleLanguageChange = (nextLocale: string) => {
-    router.replace(pathname, { locale: nextLocale });
+    if (nextLocale === locale) return;
+
+    const url = new URL(window.location.href);
+    const href = `${getPathnameWithoutLocale(url.pathname)}${url.search}${url.hash}`;
+
+    replace(href, { locale: nextLocale as Locale });
   };
 
   const currentLang = LANGUAGES.find((l) => l.value === locale) || LANGUAGES[0];
@@ -116,6 +192,7 @@ export function UtilityStrip({ className }: UtilityStripProps) {
           : "grid-rows-[1fr] translate-y-0 opacity-100",
         className
       )}
+      style={{ viewTransitionName: "utility-strip" }}
     >
       <div className="min-h-0">
         <div className="relative mx-auto flex h-8 w-full max-w-7xl items-center justify-between px-4 sm:px-6">

@@ -3,6 +3,9 @@
 :root {
   --background: #faf6ee;
   --foreground: #1c1c1c;
+  --scrollbar-thumb: #1a5c38;
+  --scrollbar-thumb-hover: #c4944a;
+  --scrollbar-thumb-active: #a67832;
 }
 
 @theme inline {
@@ -18,25 +21,64 @@ body {
   font-family: var(--font-satoshi), Arial, Helvetica, sans-serif;
 }
 
-@keyframes hero-scroll-cue {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
+/* ------------------------------------------------------------------ */
+/*  Scrollbar — fully hidden, clean like Awwwards sites                */
+/* ------------------------------------------------------------------ */
 
-  50% {
-    transform: translateY(8px);
+*,
+*::before,
+*::after {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  html {
+    scrollbar-width: auto;
+    -ms-overflow-style: auto;
   }
 }
 
-@keyframes utility-shimmer {
-  from {
-    background-position: 160% 50%;
-  }
+/* ------------------------------------------------------------------ */
+/*  Focus — no default outline, custom ring for keyboard only          */
+/* ------------------------------------------------------------------ */
 
-  to {
-    background-position: -60% 50%;
+*,
+*::before,
+*::after {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--scrollbar-thumb);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+:-moz-focusring {
+  outline: 2px solid var(--scrollbar-thumb);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid ButtonText;
+    outline-offset: 3px;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Shimmer animation                                                   */
+/* ------------------------------------------------------------------ */
+
+@keyframes utility-shimmer {
+  from { background-position: 160% 50%; }
+  to   { background-position: -60% 50%; }
 }
 
 .utility-strip-shimmer {
@@ -59,5 +101,48 @@ body {
   .utility-strip-shimmer {
     animation: none;
     color: #faf6ee;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Hero scroll cue                                                     */
+/* ------------------------------------------------------------------ */
+
+@keyframes hero-scroll-cue {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+/* ------------------------------------------------------------------ */
+/*  View Transitions                                                    */
+/* ------------------------------------------------------------------ */
+
+::view-transition-group(site-header)   { animation: none; z-index: 100; }
+::view-transition-old(site-header)     { display: none; }
+::view-transition-new(site-header)     { animation: none; }
+
+::view-transition-group(utility-strip) { animation: none; z-index: 110; }
+::view-transition-old(utility-strip)   { display: none; }
+::view-transition-new(utility-strip)   { animation: none; }
+
+::view-transition-old(root) { animation: vt-fade-out 180ms ease-in both; }
+::view-transition-new(root) { animation: vt-fade-in 220ms ease-out 100ms both; }
+
+@keyframes vt-fade-out {
+  from { opacity: 1; filter: blur(0); }
+  to   { opacity: 0; filter: blur(2px); }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }

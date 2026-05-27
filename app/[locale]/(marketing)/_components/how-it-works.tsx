@@ -2,7 +2,7 @@
 
 import { BookOpenText, MessageSquareText, PenLine, Plane } from "lucide-react";
 import {
-  motion,
+  m,
   type MotionValue,
   useInView,
   useScroll,
@@ -77,7 +77,7 @@ function StepCard({
         </span>
       ) : null}
 
-      <motion.div
+      <m.div
         className="relative z-10 mx-auto flex size-20 items-center justify-center overflow-hidden rounded-full border border-[#1a5c38]/25 bg-[#faf6ee] text-[#1a5c38] shadow-[0_18px_45px_rgba(13,43,26,0.08)]"
         initial={{ opacity: 0, scale: 0.72, y: 18 }}
         animate={sectionInView ? { opacity: 1, scale: 1, y: 0 } : {}}
@@ -89,31 +89,31 @@ function StepCard({
           delay: index * 0.08,
         }}
       >
-        <motion.span
+        <m.span
           className="absolute inset-x-0 bottom-0 h-full origin-bottom bg-[#1a5c38]"
           style={{ scaleY: fillProgress }}
         />
-        <motion.span
+        <m.span
           className="absolute inset-2 rounded-full border border-[#faf6ee]/20"
           style={{ opacity: fillProgress }}
         />
-        <motion.span className="relative z-10" style={{ color: iconColor }}>
+        <m.span className="relative z-10" style={{ color: iconColor }}>
           <Icon className="size-6" strokeWidth={1.5} />
-        </motion.span>
-      </motion.div>
+        </m.span>
+      </m.div>
 
-      <motion.h3
+      <m.h3
         className="mt-8 font-serif text-3xl font-semibold leading-tight text-[#1a5c38]"
         style={{ opacity: contentOpacity, y: contentY }}
       >
         {title}
-      </motion.h3>
-      <motion.p
+      </m.h3>
+      <m.p
         className="mx-auto mt-5 max-w-xs text-base leading-7 text-[#0d2b1a]/72"
         style={{ opacity: contentOpacity, y: contentY }}
       >
         {description}
-      </motion.p>
+      </m.p>
     </article>
   );
 }

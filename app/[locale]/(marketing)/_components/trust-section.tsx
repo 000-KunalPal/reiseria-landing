@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import {
   animate,
-  motion,
+  m,
   useInView,
   useMotionValue,
   useTransform,
@@ -85,7 +85,9 @@ function CountUpRating({ value }: { value: number }) {
 
   useEffect(() => {
     const unsubscribe = rounded.on("change", setDisplayValue);
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, [rounded]);
 
   useEffect(() => {
@@ -114,6 +116,9 @@ function CountUpRating({ value }: { value: number }) {
 export function TrustSection() {
   const t = useTranslations("TrustSection");
   const [activeReview, setActiveReview] = useState(0);
+  const isPausedRef = useRef(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
   const reviews: ReviewType[] = [
     {
@@ -155,7 +160,9 @@ export function TrustSection() {
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      setActiveReview((current) => (current + 1) % reviews.length);
+      if (!isPausedRef.current) {
+        setActiveReview((current) => (current + 1) % reviews.length);
+      }
     }, 5500);
 
     return () => window.clearInterval(interval);
@@ -170,10 +177,18 @@ export function TrustSection() {
   };
 
   return (
-    <section className="bg-[#faf6ee] px-5 py-20 sm:px-8 sm:py-24 lg:px-16 lg:py-28">
+    <m.section
+      ref={sectionRef}
+      className="bg-[#faf6ee] px-5 py-20 sm:px-8 sm:py-24 lg:px-16 lg:py-28"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div className="max-w-xl">
+          <m.div
+            className="max-w-xl"
+            initial={{ opacity: 0, y: 16 }}
+            animate={isInView ? { opacity: 1, y: 0 } : undefined}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
             <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-[#1a5c38]">
               <span className="size-2.5 rounded-full bg-[#1a5c38]" />
               {t("badge")}
@@ -191,9 +206,18 @@ export function TrustSection() {
               {t("readGuestStories")}
               <ArrowRight className="size-4" strokeWidth={1.7} />
             </a>
-          </div>
+          </m.div>
 
-          <article className="relative overflow-hidden rounded-2xl border border-[#1a5c38]/10 bg-white/80 p-6 sm:p-8 lg:p-10">
+          <m.article
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : undefined}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+            onMouseEnter={() => { isPausedRef.current = true; }}
+            onMouseLeave={() => { isPausedRef.current = false; }}
+            onFocus={() => { isPausedRef.current = true; }}
+            onBlur={() => { isPausedRef.current = false; }}
+            className="relative overflow-hidden rounded-2xl border border-[#1a5c38]/10 bg-white/80 p-6 sm:p-8 lg:p-10"
+          >
             <div className="flex items-center justify-between gap-4">
               <div className="flex gap-1 text-[#c4944a]" aria-label={t("starReview")}>
                 {Array.from({ length: 5 }).map((_, index) => (
@@ -212,7 +236,7 @@ export function TrustSection() {
 
             <div className="relative mt-8 h-[400px] overflow-hidden sm:h-[370px] lg:h-[400px] xl:h-[370px]">
               {reviews.map((item, index) => (
-                <motion.div
+                <m.div
                   key={item.name}
                   initial={false}
                   animate={{
@@ -250,7 +274,7 @@ export function TrustSection() {
                       {item.meta}
                     </p>
                   </div>
-                </motion.div>
+                </m.div>
               ))}
             </div>
 
@@ -289,10 +313,15 @@ export function TrustSection() {
                 </button>
               </div>
             </div>
-          </article>
+          </m.article>
         </div>
 
-        <div className="mt-10 grid gap-px overflow-hidden rounded-[28px] border border-[#1a5c38]/10 bg-[#1a5c38]/10 sm:grid-cols-3">
+        <m.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
+          className="mt-10 grid gap-px overflow-hidden rounded-[28px] border border-[#1a5c38]/10 bg-[#1a5c38]/10 sm:grid-cols-3"
+        >
           <div className="flex flex-col items-center justify-center bg-[#f0e6d2] p-6 text-center">
             <GoogleMark />
             <CountUpRating value={4.8} />
@@ -316,9 +345,14 @@ export function TrustSection() {
               {t("supportLabel")}
             </p>
           </div>
-        </div>
+        </m.div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-[28px] bg-[#1a5c38] px-6 py-5 text-center sm:flex-row sm:text-left">
+        <m.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          className="mt-8 flex flex-col items-center justify-between gap-4 rounded-[28px] bg-[#1a5c38] px-6 py-5 text-center sm:flex-row sm:text-left"
+        >
           <p className="text-sm leading-6 text-[#faf6ee]/82 lg:whitespace-nowrap">
             {t("readyToPlan")}
           </p>
@@ -329,8 +363,8 @@ export function TrustSection() {
             {t("startPlanning")}
             <ArrowRight className="size-4" strokeWidth={1.7} />
           </a>
-        </div>
+        </m.div>
       </div>
-    </section>
+    </m.section>
   );
 }

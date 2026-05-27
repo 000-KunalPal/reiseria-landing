@@ -1,23 +1,36 @@
+"use client";
+
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { m, useInView } from "motion/react";
+import { useRef } from "react";
 
 export function FinalCta() {
   const t = useTranslations("FinalCta");
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
   return (
-    <section
+    <m.section
+      ref={sectionRef}
       id="final-cta"
       className="relative flex min-h-[720px] w-full items-start justify-center overflow-hidden bg-[#faf6ee] px-5 pt-12 sm:min-h-[780px] sm:px-8 sm:pt-24 lg:min-h-[760px] lg:px-12 lg:pt-28"
     >
       <Image
-        src="/cta/cta-cover.png"
+        src="/cta/cta-cover.webp"
         alt=""
         className="object-cover object-bottom sm:object-center"
         fill
         sizes="100vw"
       />
       <div className="absolute inset-x-0 top-0 h-[48%] bg-gradient-to-b from-[#faf6ee] via-[#faf6ee]/92 to-[#faf6ee]/0 sm:h-[42%]" />
-      <div className="relative flex w-full max-w-3xl flex-col items-center text-center text-[#0d2b1a]">
+      
+      <m.div 
+        className="relative flex w-full max-w-3xl flex-col items-center text-center text-[#0d2b1a]"
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : undefined}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      >
         <h2 className="max-w-[18rem] font-serif text-[3.25rem] font-semibold leading-[0.98] sm:max-w-none sm:text-6xl sm:leading-[1.05] lg:text-7xl">
           {t("title")}
         </h2>
@@ -38,7 +51,7 @@ export function FinalCta() {
             {t("talkToUs")}
           </a>
         </div>
-      </div>
-    </section>
+      </m.div>
+    </m.section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
+import { MotionConfig, LazyMotion, domAnimation } from "motion/react";
 
 type LenisProviderProps = {
   children: React.ReactNode;
@@ -16,7 +17,11 @@ export function LenisProvider({ children }: LenisProviderProps) {
         smoothWheel: true,
       }}
     >
-      {children}
+      <MotionConfig reducedMotion="user">
+        <LazyMotion features={domAnimation}>
+          {children}
+        </LazyMotion>
+      </MotionConfig>
     </ReactLenis>
   );
 }

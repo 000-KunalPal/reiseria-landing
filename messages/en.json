@@ -6,7 +6,8 @@
     "startPlanning": "Start planning",
     "logo": "Reiseria",
     "closeMenu": "Close navigation menu",
-    "openMenu": "Open navigation menu"
+    "openMenu": "Open navigation menu",
+    "skipToContent": "Skip to main content"
   },
   "UtilityStrip": {
     "announcement": "Phase 1 concierge planning now open for early travelers",

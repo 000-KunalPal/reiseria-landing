@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRightIcon, MenuIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,14 @@ import {
 
 export default function Navbar() {
   const t = useTranslations("Navbar");
-  const [hasScrolled, setHasScrolled] = useState(false);
+  const hasScrolled = useSyncExternalStore(
+    (callback) => {
+      window.addEventListener("scroll", callback, { passive: true });
+      return () => window.removeEventListener("scroll", callback);
+    },
+    () => typeof window !== "undefined" && window.scrollY > 24,
+    () => false
+  );
   const [utilityStripVisible, setUtilityStripVisible] = useState(true);
 
   const navItems = [
@@ -24,17 +31,6 @@ export default function Navbar() {
     { href: "#itinerary", label: t("itinerary") },
     { href: "#how-it-works", label: t("howItWorks") },
   ];
-
-  useEffect(() => {
-    const updateScrolled = () => {
-      setHasScrolled(window.scrollY > 24);
-    };
-
-    updateScrolled();
-    window.addEventListener("scroll", updateScrolled, { passive: true });
-
-    return () => window.removeEventListener("scroll", updateScrolled);
-  }, []);
 
   useEffect(() => {
     const dismissUtilityStrip = () => {
@@ -57,6 +53,7 @@ export default function Navbar() {
           ? "border-[#1a5c38]/10 bg-[#faf6ee]/92 shadow-sm backdrop-blur-xl"
           : "border-transparent bg-[#faf6ee] lg:bg-transparent",
       ].join(" ")}
+      style={{ viewTransitionName: "site-header" }}
     >
       <div
         className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6"

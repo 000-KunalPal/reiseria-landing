@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { AboutReiseria } from "./_components/about-reiseria";
 import { DestinationCards } from "./_components/destination-cards";
@@ -10,6 +11,12 @@ import { ParallaxScroll } from "@/components/animted-components/scroll-parallax"
 
 type Props = {
   params: Promise<{ locale: string }>;
+};
+
+export const metadata: Metadata = {
+  title: "Reiseria | Private India and Oman Travel Planning",
+  description:
+    "Bespoke India and Oman journeys with thoughtful stays, seamless logistics, and calm concierge planning.",
 };
 
 export default async function MarketingHome({ params }: Props) {

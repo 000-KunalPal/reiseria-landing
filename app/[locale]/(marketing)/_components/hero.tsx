@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 
 const cloudinaryHeroBase =
@@ -48,30 +48,19 @@ function MouseScrollIcon({ className }: { className?: string }) {
 export function Hero() {
   const t = useTranslations("Hero");
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [variant, setVariant] = useState<"mobile" | "tablet" | "desktop">(
-    "desktop"
+  const variant = useSyncExternalStore(
+    (callback) => {
+      window.addEventListener("resize", callback);
+      return () => window.removeEventListener("resize", callback);
+    },
+    (): "mobile" | "tablet" | "desktop" => {
+      if (typeof window === "undefined") return "desktop";
+      if (window.matchMedia("(max-width: 639px)").matches) return "mobile";
+      if (window.matchMedia("(max-width: 1023px)").matches) return "tablet";
+      return "desktop";
+    },
+    (): "mobile" | "tablet" | "desktop" => "desktop"
   );
-
-  useEffect(() => {
-    const updateVariant = () => {
-      if (window.matchMedia("(max-width: 639px)").matches) {
-        setVariant("mobile");
-        return;
-      }
-
-      if (window.matchMedia("(max-width: 1023px)").matches) {
-        setVariant("tablet");
-        return;
-      }
-
-      setVariant("desktop");
-    };
-
-    updateVariant();
-    window.addEventListener("resize", updateVariant);
-
-    return () => window.removeEventListener("resize", updateVariant);
-  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -119,8 +108,8 @@ export function Hero() {
         <source src={sources.mp4} type="video/mp4" />
         <source src={sources.webm} type="video/webm" />
       </video>
-      <div className="absolute inset-0 bg-[#0d2b1a]/30 pointer-events-none z-0" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/35 pointer-events-none z-0" />
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[#0d2b1a]/18" />
+      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-t from-black/28 via-transparent to-black/18" />
       <div className="absolute inset-x-0 bottom-16 z-10 mx-auto flex max-w-5xl flex-col items-center px-5 text-center text-white sm:bottom-auto sm:top-[28%] sm:px-8 lg:top-[30%] lg:px-10">
         <h1 className="max-w-4xl font-serif text-4xl font-semibold leading-[1.04] drop-shadow-[0_3px_18px_rgba(0,0,0,0.42)] sm:text-6xl lg:text-7xl">
           {t("title")}

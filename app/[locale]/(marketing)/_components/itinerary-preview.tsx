@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
+import { m, useInView } from "motion/react";
 import { useCurrency } from "@/components/currency-context";
 import { formatPrice } from "@/lib/currency";
 
@@ -168,13 +170,22 @@ export function ItineraryPreview() {
     },
   ];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
+
   return (
-    <section
+    <m.section
+      ref={sectionRef}
       id="itinerary"
       className="bg-[#faf6ee] px-5 py-20 sm:px-8 sm:py-24 lg:px-16 lg:py-28"
     >
       <div className="mx-auto w-full max-w-7xl">
-        <div className="mx-auto max-w-3xl text-center">
+        <m.div
+          className="mx-auto max-w-3xl text-center"
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
           <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-[#1a5c38]">
             <span className="size-2.5 rounded-full bg-[#1a5c38]" />
             {t("badge")}
@@ -185,9 +196,14 @@ export function ItineraryPreview() {
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#0d2b1a]/72 sm:text-base">
             {t("subtitle")}
           </p>
-        </div>
+        </m.div>
 
-        <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-6 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:mt-16 lg:grid-cols-3 [&::-webkit-scrollbar]:hidden">
+        <m.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-6 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:mt-16 lg:grid-cols-3 [&::-webkit-scrollbar]:hidden"
+        >
           {itineraries.map((itinerary) => (
             <div
               className="min-w-[84vw] snap-center sm:min-w-0"
@@ -196,8 +212,8 @@ export function ItineraryPreview() {
               <ItineraryCard itinerary={itinerary} t={t} />
             </div>
           ))}
-        </div>
+        </m.div>
       </div>
-    </section>
+    </m.section>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { m, useInView } from "motion/react";
 import { Card, CardTitle } from "@/components/ui/card";
 import {
   Tabs,
@@ -99,7 +99,7 @@ function CardGrid({
       }}
     >
       {cards.map((card, index) => (
-        <motion.div
+        <m.div
           key={card.name}
           initial={false}
           animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
@@ -115,7 +115,7 @@ function CardGrid({
           }
         >
           <ExploreCardItem {...card} compact={monthLayout} />
-        </motion.div>
+        </m.div>
       ))}
     </div>
   );
@@ -138,7 +138,7 @@ function ExplorePanel({
           : "pointer-events-none absolute inset-0 mt-0 block"
       }
     >
-      <motion.div
+      <m.div
         initial={false}
         animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
         transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
@@ -150,7 +150,7 @@ function ExplorePanel({
           monthLayout={tab.monthLayout}
           active={active}
         />
-      </motion.div>
+      </m.div>
     </TabsContent>
   );
 }
@@ -241,13 +241,22 @@ export function DestinationCards() {
     },
   ];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
+
   return (
-    <section
+    <m.section
+      ref={sectionRef}
       id="destinations"
       className="border-t border-[#1a5c38]/15 bg-[#f0e6d2] px-5 py-20 sm:px-8 sm:py-24 lg:px-16 lg:py-28"
     >
       <div className="mx-auto w-full max-w-7xl">
-        <div className="mx-auto max-w-3xl text-center">
+        <m.div
+          className="mx-auto max-w-3xl text-center"
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
           <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-[#1a5c38]">
             <span className="size-2.5 rounded-full bg-[#1a5c38]" />
             {t("badge")}
@@ -260,36 +269,42 @@ export function DestinationCards() {
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#0d2b1a]/72 sm:text-base">
             {t("subtitle")}
           </p>
-        </div>
+        </m.div>
 
-        <Tabs
-          value={activeTab}
-          onValueChange={handleTabChange}
-          className="mt-12 flex-col items-center gap-9 sm:mt-14 sm:gap-10 lg:mt-16"
+        <m.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
         >
-          <TabsList className="grid h-14 w-full max-w-[23rem] grid-cols-3 rounded-full bg-[#e4d5be] p-1 text-[#1a5c38] shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_18px_46px_rgba(91,62,24,0.08)] sm:h-16 sm:max-w-xl sm:p-1.5">
-            {exploreTabs.map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className="h-full min-w-0 rounded-full px-2 font-serif text-[0.92rem] leading-none text-[#1a5c38] transition-[background-color,color,box-shadow] duration-300 hover:text-[#1a5c38] focus-visible:text-[#1a5c38] data-[state=active]:bg-[#1a5c38] data-[state=active]:text-[#faf6ee] data-[state=active]:shadow-[0_10px_28px_rgba(26,92,56,0.22)] data-[state=active]:hover:text-[#faf6ee] data-[state=active]:focus-visible:text-[#faf6ee] sm:px-8 sm:text-base"
-              >
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <Tabs
+            value={activeTab}
+            onValueChange={handleTabChange}
+            className="mt-12 flex-col items-center gap-9 sm:mt-14 sm:gap-10 lg:mt-16"
+          >
+            <TabsList className="grid h-14 w-full max-w-[23rem] grid-cols-3 rounded-full bg-[#e4d5be] p-1 text-[#1a5c38] shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_18px_46px_rgba(91,62,24,0.08)] sm:h-16 sm:max-w-xl sm:p-1.5">
+              {exploreTabs.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="h-full min-w-0 rounded-full px-2 font-serif text-[0.92rem] leading-none text-[#1a5c38] transition-[background-color,color,box-shadow] duration-300 hover:text-[#1a5c38] focus-visible:text-[#1a5c38] data-[state=active]:bg-[#1a5c38] data-[state=active]:text-[#faf6ee] data-[state=active]:shadow-[0_10px_28px_rgba(26,92,56,0.22)] data-[state=active]:hover:text-[#faf6ee] data-[state=active]:focus-visible:text-[#faf6ee] sm:px-8 sm:text-base"
+                >
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          <div className="relative min-h-[390px] w-full sm:min-h-[430px] lg:min-h-[390px] xl:min-h-[420px]">
-            {exploreTabs.map((tab) => (
-              <ExplorePanel
-                key={tab.value}
-                tab={tab}
-                active={activeTab === tab.value}
-              />
-            ))}
-          </div>
-        </Tabs>
+            <div className="relative min-h-[390px] w-full sm:min-h-[430px] lg:min-h-[390px] xl:min-h-[420px]">
+              {exploreTabs.map((tab) => (
+                <ExplorePanel
+                  key={tab.value}
+                  tab={tab}
+                  active={activeTab === tab.value}
+                />
+              ))}
+            </div>
+          </Tabs>
+        </m.div>
       </div>
-    </section>
+    </m.section>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useInView } from "motion/react";
+import { m, useInView } from "motion/react";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { ScrollHighlightText } from "@/components/animted-components/scroll-highlight";
@@ -21,9 +21,6 @@ type InlineImageProps = {
 function InlineImage({ src, alt, label }: InlineImageProps) {
   return (
     <span
-      tabIndex={0}
-      role="img"
-      aria-label={alt}
       className="group/img relative mx-1 inline-flex h-9 w-14 translate-y-1 cursor-pointer overflow-hidden rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/10 align-baseline outline-none transition-[transform,box-shadow,ring-color] duration-300 ease-out hover:-translate-y-1 hover:rotate-[-2deg] hover:scale-125 hover:shadow-[0_14px_34px_rgba(0,0,0,0.34)] hover:ring-[#d8b15f]/80 focus-visible:-translate-y-1 focus-visible:rotate-[-2deg] focus-visible:scale-125 focus-visible:ring-2 focus-visible:ring-[#d8b15f] sm:mx-2 sm:h-12 sm:w-[4.5rem] md:h-14 md:w-20"
     >
       <span className="block h-full w-full transition-transform duration-500 ease-out group-hover/img:scale-110 group-focus-visible/img:scale-110">
@@ -47,21 +44,6 @@ function InlineImage({ src, alt, label }: InlineImageProps) {
   );
 }
 
-function GrainOverlay() {
-  return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-10 opacity-[0.03]"
-      style={{
-        backgroundImage:
-          "url('/textures/grain-128.png')",
-        backgroundRepeat: "repeat",
-        backgroundSize: "128px 128px",
-      }}
-    />
-  );
-}
-
 export function AboutReiseria() {
   const t = useTranslations("AboutReiseria");
   const sectionRef = useRef<HTMLElement>(null);
@@ -70,14 +52,12 @@ export function AboutReiseria() {
   const paragraph = t("paragraph");
 
   return (
-    <motion.section
+    <m.section
       ref={sectionRef}
       id="about-reiseria"
       className="relative overflow-hidden bg-[#1a5c38] px-5 py-20 sm:px-8 sm:py-24 lg:px-16 lg:py-28"
     >
-      <GrainOverlay />
-
-      <motion.div
+      <m.div
         className="relative z-20 mx-auto mb-10 flex items-center justify-center gap-4 sm:mb-14"
         initial={{ opacity: 0, y: 16 }}
         animate={isInView ? { opacity: 1, y: 0 } : undefined}
@@ -88,7 +68,7 @@ export function AboutReiseria() {
           {t("title")}
         </span>
         <span className="h-px w-8 bg-[#d8b15f]/50 sm:w-12" />
-      </motion.div>
+      </m.div>
 
       <div
         className="relative z-20 mx-auto max-w-5xl text-center"
@@ -137,6 +117,6 @@ export function AboutReiseria() {
           }}
         />
       </div>
-    </motion.section>
+    </m.section>
   );
 }

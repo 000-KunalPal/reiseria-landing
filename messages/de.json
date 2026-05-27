@@ -6,7 +6,8 @@
     "startPlanning": "Planung starten",
     "logo": "Reiseria",
     "closeMenu": "Navigationsmenü schließen",
-    "openMenu": "Navigationsmenü öffnen"
+    "openMenu": "Navigationsmenü öffnen",
+    "skipToContent": "Zum Hauptinhalt springen"
   },
   "UtilityStrip": {
     "announcement": "Phase 1 der Concierge-Planung ist jetzt für Frühreisende geöffnet",

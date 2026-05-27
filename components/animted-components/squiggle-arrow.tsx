@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { motion, type MotionValue } from "motion/react"
+import { m, type MotionValue } from "motion/react"
 
 interface SquigglyArrowProps {
     width?: number
@@ -49,23 +49,23 @@ export default function SquigglyArrow({
             <g transform={rotation}>
                 {/* Background Squiggly arrow (Muted) */}
                 <path
-                    d={selectedPath}
-                    stroke="currentColor"
-                    strokeWidth={strokeWidth}
-                    strokeLinecap="round"
-                    fill="none"
-                    className="opacity-18"
-                />
+                     d={selectedPath}
+                     stroke="currentColor"
+                     strokeWidth={strokeWidth}
+                     strokeLinecap="round"
+                     fill="none"
+                     className="opacity-18"
+                 />
 
                 {/* Foreground Animated Squiggly arrow */}
-                <motion.path
-                    d={selectedPath}
-                    stroke="currentColor"
-                    strokeWidth={strokeWidth}
-                    strokeLinecap="round"
-                    fill="none"
-                    style={{ pathLength: progress }}
-                />
+                <m.path
+                     d={selectedPath}
+                     stroke="currentColor"
+                     strokeWidth={strokeWidth}
+                     strokeLinecap="round"
+                     fill="none"
+                     style={{ pathLength: progress }}
+                 />
             </g>
         </svg>
     )

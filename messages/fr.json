@@ -6,7 +6,8 @@
     "startPlanning": "Planifier mon projet",
     "logo": "Reiseria",
     "closeMenu": "Fermer le menu de navigation",
-    "openMenu": "Ouvrir le menu de navigation"
+    "openMenu": "Ouvrir le menu de navigation",
+    "skipToContent": "Passer au contenu principal"
   },
   "UtilityStrip": {
     "announcement": "La planification exclusive Phase 1 est désormais ouverte aux premiers voyageurs",

@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect, useRef, ReactNode } from 'react';
-import { motion, useMotionValue, useAnimationFrame, useTransform } from 'motion/react';
+import { useCallback, useEffect, useRef, ReactNode } from 'react';
+import { m, useMotionValue, useAnimationFrame, useTransform } from 'motion/react';
 
 
 interface GradientTextProps {
@@ -24,7 +24,7 @@ export default function GradientText({
     pauseOnHover = false,
     yoyo = true
 }: GradientTextProps) {
-    const [isPaused, setIsPaused] = useState(false);
+    const isPausedRef = useRef(false);
     const progress = useMotionValue(0);
     const elapsedRef = useRef(0);
     const lastTimeRef = useRef<number | null>(null);
@@ -34,7 +34,7 @@ export default function GradientText({
 
 
     useAnimationFrame(time => {
-        if (isPaused) {
+        if (isPausedRef.current) {
             lastTimeRef.current = null;
             return;
         }
@@ -87,12 +87,12 @@ export default function GradientText({
 
 
     const handleMouseEnter = useCallback(() => {
-        if (pauseOnHover) setIsPaused(true);
+        if (pauseOnHover) isPausedRef.current = true;
     }, [pauseOnHover]);
 
 
     const handleMouseLeave = useCallback(() => {
-        if (pauseOnHover) setIsPaused(false);
+        if (pauseOnHover) isPausedRef.current = false;
     }, [pauseOnHover]);
 
 
@@ -110,18 +110,18 @@ export default function GradientText({
 
 
     return (
-        <motion.span
+        <m.span
             className={`relative mx-auto inline-flex max-w-fit flex-row items-center justify-center rounded-[1.25rem] font-medium backdrop-blur transition-shadow duration-500 overflow-hidden cursor-pointer ${showBorder ? 'py-1 px-2' : ''} ${className}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             {showBorder && (
-                <motion.div
+                <m.div
                     className="absolute inset-0 z-0 pointer-events-none rounded-[1.25rem]"
                     style={{ ...gradientStyle, backgroundPosition }}
                 >
                     <div
-                        className="absolute bg-black rounded-[1.25rem] z-[-1]"
+                        className="absolute bg-[#0d2b1a] rounded-[1.25rem] z-[-1]"
                         style={{
                             width: 'calc(100% - 2px)',
                             height: 'calc(100% - 2px)',
@@ -130,14 +130,14 @@ export default function GradientText({
                             transform: 'translate(-50%, -50%)'
                         }}
                     />
-                </motion.div>
+                </m.div>
             )}
-            <motion.span
+            <m.span
                 className="inline-block relative z-2 text-transparent bg-clip-text"
                 style={{ ...gradientStyle, backgroundPosition, WebkitBackgroundClip: 'text' }}
             >
                 {children}
-            </motion.span>
-        </motion.span>
+            </m.span>
+        </m.span>
     );
 }
